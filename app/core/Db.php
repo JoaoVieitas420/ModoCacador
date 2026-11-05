@@ -41,6 +41,17 @@ class Db {
   }
 
   /**
+  * Método que devolve o nome da tabela de uma instrução INSERT ou DELETE
+  * @param  string   $sql   instrução SQL
+  *
+  * @return string   nome da tabela
+  */
+  private function getTable(string $sql) {
+    preg_match('/^\s*(?:INSERT\s+INTO|DELETE\s+FROM)\s+`?(\w+)`?/i', $sql, $matches);
+    return $matches[1];
+  }
+
+  /**
   * Método para a execução do SQL
   * @param  string   $sql         instrução SQL
   * @param  array    $parameters  array de parâmetros
@@ -48,7 +59,7 @@ class Db {
   * @return array    $response    dataset
   */
   
-  // precisa de ser mais genérica porque, nesta versão, apenas responde corretamente para operações sobre a tabela "artigos"
+  // o nome da tabela é obtido a partir do próprio SQL (INSERT INTO <tabela> / DELETE FROM <tabela>)
   public function execQuery(string $sql, array $parameters = []) {
       $stmt = $this->conn->prepare($sql);
       $this->setParameters($stmt, $parameters);
@@ -60,13 +71,13 @@ class Db {
           $response = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
       } elseif (stripos(trim($sql), 'INSERT') === 0) { 
           $lastId = $this->conn->insert_id; // ID do registo inserido
-          $result = $this->execQuery('SELECT id, nome, preco, avaliacao, ano, imagem, categoria_id FROM artigos WHERE id = ?', ['i', [$lastId]]); 
+          $result = $this->execQuery('SELECT * FROM ' . $this->getTable($sql) . ' WHERE id = ?', ['i', [$lastId]]);
           $response = $result[0];
       } elseif (stripos(trim($sql), 'UPDATE') === 0) { 
           $response = $parameters[1]; // devolve os dados enviados para o execQuery (não há necessidade de ir buscar à BD)
       } elseif (stripos(trim($sql), 'DELETE') === 0) {
           $id = $parameters[1][0]; // id do registo para DELETE
-          $deletedData = $this->execQuery('SELECT id, nome, preco, avaliacao, ano, imagem, categoria_id FROM artigos WHERE id = ?', ['i', [$id]]);
+          $deletedData = $this->execQuery('SELECT * FROM ' . $this->getTable($sql) . ' WHERE id = ?', ['i', [$id]]);
           if (!empty($deletedData)) {
             $response = $deletedData[0];
           } else {

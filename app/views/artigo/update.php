@@ -4,7 +4,7 @@
 ?>
 
 <h2>Editar Artigo</h2>
-<form action="<?php echo $url_alias;?>/artigo/update/<?php echo $data['artigo'][0]['id'];?>" method="POST">
+<form action="<?php echo $url_alias;?>/artigo/update/<?php echo $data['artigo'][0]['id'];?>" method="POST" onsubmit="return confirm('Guardar as alterações deste artigo?');">
   <label for="nome">Nome:</label>
   <input type="text" id="nome" name="nome" value="<?php echo $data['artigo'][0]['nome']; ?>" required><br>
 

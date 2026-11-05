@@ -15,7 +15,8 @@
       <div class="row">
         <div class="col">
           <h1>Artigos de Caça</h1>
-          <a href="<?php echo $url_alias;?>/artigo">Lista de artigos</a>
+          <a href="<?php echo $url_alias;?>/artigo">Lista de artigos</a><br>
+          <a href="<?php echo $url_alias;?>/categoria">Lista de Categorias</a>
         </div>
       </div>
     </div>

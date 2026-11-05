@@ -35,3 +35,32 @@ CREATE TABLE `utilizador` (
   `ativo` bit(1) DEFAULT NULL COMMENT '',
   PRIMARY KEY (`id_utilizador`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='User table';
+
+DROP TABLE IF EXISTS variantes;
+CREATE TABLE `variantes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'primary key',
+  `artigo_id` int(11) NOT NULL COMMENT 'FK para artigos',
+  `cor` varchar(100) DEFAULT NULL COMMENT 'Cor',
+  `tamanho` varchar(50) DEFAULT NULL COMMENT 'Tamanho',
+  `material` varchar(100) DEFAULT NULL COMMENT 'Material',
+  `stock` int(11) NOT NULL DEFAULT 0 COMMENT 'Unidades em stock',
+  PRIMARY KEY (`id`),
+  KEY `artigo_id` (`artigo_id`),
+  CONSTRAINT `variantes_ibfk_1` FOREIGN KEY (`artigo_id`) REFERENCES `artigos` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Variantes dos artigos (cor, tamanho, material)';
+
+DROP TABLE IF EXISTS imagens;
+CREATE TABLE `imagens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'primary key',
+  `artigo_id` int(11) NOT NULL COMMENT 'FK para artigos',
+  `cor` varchar(100) DEFAULT NULL COMMENT 'Cor da variante a que a imagem corresponde (NULL = imagem geral do artigo)',
+  `caminho` varchar(4000) NOT NULL COMMENT 'Caminho da imagem',
+  `descricao` varchar(255) DEFAULT NULL COMMENT 'Descricao da imagem',
+  `autor` varchar(255) DEFAULT NULL COMMENT 'Autor da imagem',
+  `licenca` varchar(100) DEFAULT NULL COMMENT 'Licenca da imagem',
+  `fonte` varchar(1000) DEFAULT NULL COMMENT 'URL de origem da imagem',
+  `ordem` int(11) NOT NULL DEFAULT 1 COMMENT 'Ordem na galeria',
+  PRIMARY KEY (`id`),
+  KEY `artigo_id` (`artigo_id`),
+  CONSTRAINT `imagens_ibfk_1` FOREIGN KEY (`artigo_id`) REFERENCES `artigos` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Biblioteca de imagens dos artigos';

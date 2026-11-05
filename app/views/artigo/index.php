@@ -27,8 +27,8 @@ if (isset($data['info']) && isset($data['type'])) {
       <strong><?php echo $artigo['nome']; ?></strong>
       - <?php echo $artigo['preco']; ?> €
       <a href="<?php echo $url_alias;?>/artigo/get/<?php echo $artigo['id'];?>">Ver +</a> | 
-      <a href="<?php echo $url_alias;?>/artigo/update/<?php echo $artigo['id'];?>">Editar</a> | 
-      <a href="<?php echo $url_alias;?>/artigo/delete/<?php echo $artigo['id'];?>">Eliminar</a>
+      <a href="<?php echo $url_alias;?>/artigo/update/<?php echo $artigo['id'];?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode('Editar o artigo "' . $artigo['nome'] . '"?')); ?>);">Editar</a> | 
+      <a href="<?php echo $url_alias;?>/artigo/delete/<?php echo $artigo['id'];?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode('Tem a certeza que quer eliminar o artigo "' . $artigo['nome'] . '"? As variantes e imagens associadas também serão eliminadas.')); ?>);">Eliminar</a>
     </li>
   <?php } ?>
 </ul>

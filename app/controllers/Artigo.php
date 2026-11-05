@@ -25,10 +25,14 @@ class Artigo extends Controller {
   public function get($id = null) {
     if (is_numeric($id)) {
       $Artigos = $this->model('Artigos');
-      $Categorias = $this->model('Categorias'); 
+      $Categorias = $this->model('Categorias');
+      $Variantes = $this->model('Variantes');
+      $Imagens = $this->model('Imagens');
       $data = $Artigos::findArtigoById($id);
       $categorias = $Categorias::getAllCategorias();
-      $this->view('artigo/get', ['artigos' => $data, 'categorias' => $categorias]);
+      $variantes = $Variantes::getVariantesByArtigo($id);
+      $imagens = $Imagens::getImagensByArtigo($id);
+      $this->view('artigo/get', ['artigos' => $data, 'categorias' => $categorias, 'variantes' => $variantes, 'imagens' => $imagens]);
     } else {
        $this->pageNotFound();
     }
