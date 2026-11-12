@@ -1,4 +1,7 @@
-INSERT INTO categorias(id,categoria) VALUES
+/*!40101 SET NAMES utf8mb4 */;
+USE huntingdb;
+
+INSERT INTO categorias(id, categoria) VALUES
 (1,'Vestuário'),
 (2,'Calçado'),
 (3,'Óticas'),

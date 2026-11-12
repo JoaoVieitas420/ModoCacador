@@ -10,7 +10,7 @@ CREATE TABLE `categorias` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'primary key',
   `categoria` varchar(255) DEFAULT NULL COMMENT 'Categoria',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabela de categorias';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Tabela de categorias';
 
 DROP TABLE IF EXISTS artigos;
 CREATE TABLE `artigos` (
@@ -24,7 +24,7 @@ CREATE TABLE `artigos` (
   PRIMARY KEY (`id`),
   KEY `categoria_id` (`categoria_id`),
   CONSTRAINT `artigos_ibfk_1` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabela de artigos de caca';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Tabela de artigos de caca';
 
 DROP TABLE IF EXISTS utilizador;
 CREATE TABLE `utilizador` (
@@ -32,9 +32,9 @@ CREATE TABLE `utilizador` (
   `palavra_passe` varchar(400) DEFAULT NULL COMMENT 'Password',
   `nome` varchar(400) DEFAULT NULL COMMENT 'Name',
   `fotografia` varchar(4000) DEFAULT NULL COMMENT 'Photo',
-  `ativo` bit(1) DEFAULT NULL COMMENT '',
+  `ativo` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id_utilizador`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='User table';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='User table';
 
 DROP TABLE IF EXISTS variantes;
 CREATE TABLE `variantes` (
@@ -47,7 +47,7 @@ CREATE TABLE `variantes` (
   PRIMARY KEY (`id`),
   KEY `artigo_id` (`artigo_id`),
   CONSTRAINT `variantes_ibfk_1` FOREIGN KEY (`artigo_id`) REFERENCES `artigos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Variantes dos artigos (cor, tamanho, material)';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Variantes dos artigos (cor, tamanho, material)';
 
 DROP TABLE IF EXISTS imagens;
 CREATE TABLE `imagens` (
@@ -63,4 +63,5 @@ CREATE TABLE `imagens` (
   PRIMARY KEY (`id`),
   KEY `artigo_id` (`artigo_id`),
   CONSTRAINT `imagens_ibfk_1` FOREIGN KEY (`artigo_id`) REFERENCES `artigos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Biblioteca de imagens dos artigos';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Biblioteca de imagens dos artigos';
+
