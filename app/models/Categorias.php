@@ -6,8 +6,28 @@ class Categorias {
 
   public static function getAllCategorias() {
     $conn = new Db();
-    $response = $conn->execQuery('SELECT id, categoria FROM categorias');
+    $response = $conn->execQuery('SELECT id, categoria FROM categorias ORDER BY categoria');
     return $response;
+  }
+
+  /**
+  * Categorias com o número de artigos de cada uma
+  *
+  * @return   array
+  */
+  public static function getCategoriasComContagem() {
+    $conn = new Db();
+    $response = $conn->execQuery('SELECT c.id, c.categoria, COUNT(a.id) AS artigos FROM categorias c LEFT JOIN artigos a ON a.categoria_id = c.id GROUP BY c.id ORDER BY c.categoria');
+    return $response;
+  }
+
+  /**
+  * Verifica se já existe uma categoria com o mesmo nome (sem distinguir maiúsculas)
+  */
+  public static function existeCategoria(string $nome, $ignorarId = null) {
+    $conn = new Db();
+    $response = $conn->execQuery('SELECT COUNT(*) AS total FROM categorias WHERE LOWER(categoria) = LOWER(?) AND id <> ?', array('si', array($nome, (int) $ignorarId)));
+    return (int) $response[0]['total'] > 0;
   }
 
   /**

@@ -70,9 +70,14 @@ class Db {
       if (stripos(trim($sql), 'SELECT') === 0) { 
           $response = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
       } elseif (stripos(trim($sql), 'INSERT') === 0) { 
-          $lastId = $this->conn->insert_id; // ID do registo inserido
-          $result = $this->execQuery('SELECT * FROM ' . $this->getTable($sql) . ' WHERE id = ?', ['i', [$lastId]]);
-          $response = $result[0];
+          $lastId = $this->conn->insert_id; // ID do registo inserido (0 em tabelas sem AUTO_INCREMENT)
+          if ($lastId) {
+            $result = $this->execQuery('SELECT * FROM ' . $this->getTable($sql) . ' WHERE id = ?', ['i', [$lastId]]);
+            $response = $result[0];
+          } else {
+            // ex.: tabela utilizador, cuja chave é id_utilizador (texto): devolve os dados enviados
+            $response = $parameters[1];
+          }
       } elseif (stripos(trim($sql), 'UPDATE') === 0) { 
           $response = $parameters[1]; // devolve os dados enviados para o execQuery (não há necessidade de ir buscar à BD)
       } elseif (stripos(trim($sql), 'DELETE') === 0) {

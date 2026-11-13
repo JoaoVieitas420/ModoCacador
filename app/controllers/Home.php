@@ -2,9 +2,9 @@
 use app\core\Controller;
 
 class Home extends Controller {
-  // invocação da view index.php de /home
+  // a página inicial da aplicação é a lista de artigos
   public function index() {
-    $this->view('home/index');
+    $this->redirect('/artigo');
   }
 
 }

@@ -5,7 +5,16 @@ Imagens usadas exclusivamente para fins académicos e não comerciais (trabalho 
 - **Fotos de produto** — loja online [FRANKONIA](https://www.frankonia.de). Direitos reservados à FRANKONIA e aos respetivos fabricantes; utilizadas com indicação da fonte, ao abrigo da utilização para fins de ensino e investigação.
 - **Restantes imagens** — [Wikimedia Commons](https://commons.wikimedia.org), sob licenças livres (Creative Commons ou domínio público), com o autor indicado.
 
-Os mesmos dados estão na tabela `imagens` da base de dados e aparecem por baixo de cada foto na página do artigo.
+Os dados das imagens dos artigos estão também na tabela `imagens` da base de dados.
+
+## Outras imagens da interface
+
+| Ficheiro | Onde é usada | Autor / Fonte | Licença | Link |
+|---|---|---|---|---|
+| assets/img/login/floresta.jpg | Fundo do ecrã "Iniciar sessão" | Vadim Sherbakov | CC0 (domínio público) | [link](https://commons.wikimedia.org/wiki/File:Foggy_pine_(Unsplash).jpg) |
+| assets/img/logo/logo_emblema.png | Logo da aplicação | Silhueta criada a partir de uma imagem da Pngtree | Confirmar a licença Pngtree (o plano gratuito exige citar a fonte) | [pngtree.com](https://pngtree.com) |
+
+## Imagens dos artigos
 
 | Ficheiro | Artigo | Autor / Fonte | Licença / Uso | Link |
 |---|---|---|---|---|
@@ -151,7 +160,6 @@ Os mesmos dados estão na tabela `imagens` da base de dados e aparecem por baixo
 | 50_1.jpg | Carabina de Ferrolho .30-06 Springfield | FRANKONIA (loja online) | Uso académico, não comercial (© FRANKONIA / fabricante) | [link](https://www.frankonia.de/p/mauser/repetierb%C3%BCchse-m-25-max/2023422) |
 | 51_1.jpg | Carabina de Ferrolho .243 Winchester | Everett Walker | CC BY-SA 4.0 | [link](https://commons.wikimedia.org/wiki/File:Weatherby_Vanguard_2_by_HOWA.jpg) |
 | 51_2.jpg | Carabina de Ferrolho .243 Winchester | Arthurrh | CC BY-SA 3.0 | [link](https://commons.wikimedia.org/wiki/File:Ruger_77MII_204_Action.jpg) |
-| 51_3.png | Carabina de Ferrolho .243 Winchester | Morten Schultz - Hunting and wildlife | CC BY 3.0 | [link](https://commons.wikimedia.org/wiki/File:Recently_harvested_roe_deer_and_suppressed_rifle,_Denmark_01.png) |
 | 52_1.jpg | Carabina de Pequeno Calibre .22 LR | FRANKONIA (loja online) | Uso académico, não comercial (© FRANKONIA / fabricante) | [link](https://www.frankonia.de/p/cz/kk-repetierb%C3%BCchse-457-hunter-strata/2024166) |
 | 52_2.jpg | Carabina de Pequeno Calibre .22 LR | FRANKONIA (loja online) | Uso académico, não comercial (© FRANKONIA / fabricante) | [link](https://www.frankonia.de/p/cz/kk-repetierb%C3%BCchse-457-hunter-strata/2024166) |
 | 52_3.jpg | Carabina de Pequeno Calibre .22 LR | FRANKONIA (loja online) | Uso académico, não comercial (© FRANKONIA / fabricante) | [link](https://www.frankonia.de/p/cz/kk-repetierb%C3%BCchse-457-hunter-strata/2024166) |

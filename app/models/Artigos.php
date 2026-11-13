@@ -16,6 +16,49 @@ class Artigos {
   }
 
   /**
+  * Ordenações permitidas na lista (lista fechada: o valor vindo do URL nunca entra diretamente no SQL)
+  */
+  const ORDENACOES = [
+    'nome' => 'a.nome ASC',
+    'preco' => 'a.preco ASC',
+    'preco_desc' => 'a.preco DESC',
+    'recentes' => 'a.ano DESC, a.id DESC'
+  ];
+
+  /**
+  * Pesquisa de artigos com filtro por nome e categoria, ordenação e paginação.
+  * Inclui o nome da categoria, o número de variantes e o stock total.
+  *
+  * @return   array
+  */
+  public static function pesquisarArtigos(string $pesquisa, int $categoriaId, string $ordem, int $limite, int $offset) {
+    $conn = new Db();
+    $ordenacao = self::ORDENACOES[$ordem] ?? self::ORDENACOES['nome'];
+    $response = $conn->execQuery(
+      'SELECT a.id, a.nome, a.preco, a.avaliacao, a.ano, a.imagem, c.categoria,
+              COUNT(v.id) AS nv, COALESCE(SUM(v.stock), 0) AS stock
+       FROM artigos a
+       LEFT JOIN categorias c ON c.id = a.categoria_id
+       LEFT JOIN variantes v ON v.artigo_id = a.id
+       WHERE a.nome LIKE ? AND (? = 0 OR a.categoria_id = ?)
+       GROUP BY a.id
+       ORDER BY ' . $ordenacao . '
+       LIMIT ? OFFSET ?',
+      array('siiii', array('%' . $pesquisa . '%', $categoriaId, $categoriaId, $limite, $offset))
+    );
+    return $response;
+  }
+
+  public static function contarArtigos(string $pesquisa, int $categoriaId) {
+    $conn = new Db();
+    $response = $conn->execQuery(
+      'SELECT COUNT(*) AS total FROM artigos WHERE nome LIKE ? AND (? = 0 OR categoria_id = ?)',
+      array('sii', array('%' . $pesquisa . '%', $categoriaId, $categoriaId))
+    );
+    return (int) $response[0]['total'];
+  }
+
+  /**
   * Método para a obtenção de um artigo pelo id correspondente
   * @param    int     $id   Id. do artigo
   *

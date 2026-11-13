@@ -24,6 +24,7 @@ class App {
     $this->startIndexFromUrl = 1; // NO MEU AMBIENTE DE DESENVOLVIMENTO!
     $this->pageNotFound = '';     // boolean
     $this->parseURL();
+    $this->controlarAcesso();
     $this->setController();
     $this->setMethodFromUrl();
     $this->setParamsFromUrl();
@@ -40,11 +41,50 @@ class App {
   *
   */
   private function parseURL() {
-    $this->URLArray = explode('/', substr($_SERVER['REQUEST_URI'], 1));
+    // só o caminho: a query string (ex.: ?q=faca&pagina=2) é lida pelos controladores em $_GET
+    $this->URLArray = explode('/', substr(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), 1));
     // print_r($this->URLArray);
     // $_SERVER['REQUEST_URI'] - Exemplo:
     // para: http://www.ipvc.pt/ecgm/ano3.php?uc=pw
     // devolve: /ecgm/ano3.php?uc=pw
+  }
+
+  /**
+  * Controlo de acesso, feito antes de instanciar o controlador:
+  * > sem sessão iniciada só a página de login (controlador Auth) está disponível
+  * > quem tem uma palavra-passe temporária só pode alterá-la (controlador Perfil)
+  * > a gestão de utilizadores é reservada a administradores
+  * > todos os pedidos POST têm de trazer o token CSRF da sessão
+  */
+  private function controlarAcesso() {
+    $nome = ucfirst(strtolower($this->URLArray[$this->startIndexFromUrl] ?? ''));
+    $utilizador = Sessao::utilizador();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !Sessao::csrfValido($_POST['csrf'] ?? null)) {
+      http_response_code(400);
+      exit('Pedido inválido (token de segurança expirado). Volte atrás, recarregue a página e tente novamente.');
+    }
+
+    if ($utilizador === null) {
+      if ($nome !== 'Auth') {
+        $this->redirecionar('/auth/login');
+      }
+      return;
+    }
+
+    if ($utilizador['alterar_palavra_passe'] && !in_array($nome, ['Perfil', 'Auth'])) {
+      $this->redirecionar('/perfil');
+    }
+
+    if ($nome === 'Utilizador' && !Sessao::eAdmin()) {
+      Sessao::flash('erro', 'Apenas administradores podem gerir utilizadores.');
+      $this->redirecionar('/artigo');
+    }
+  }
+
+  private function redirecionar(string $caminho) {
+    header('Location: ' . URL_BASE . $caminho);
+    exit;
   }
 
   /**
@@ -75,8 +115,12 @@ class App {
     $url = $this->URLArray;
     $startIndex = $this->startIndexFromUrl + 1;
     
-    if (!empty($url[$startIndex]) && isset($url[$startIndex])) {
-      if (method_exists($this->controller, $url[$startIndex]) && !$this->pageNotFound) {
+    if ($this->pageNotFound) {
+      // controlador inexistente (ex.: /xyz): página 404, mesmo sem método no URL
+      $this->method = 'pageNotFound';
+    } elseif (!empty($url[$startIndex]) && isset($url[$startIndex])) {
+      // is_callable (e não method_exists): métodos privados dos controladores não podem ser abertos pelo URL
+      if (is_callable([$this->controller, $url[$startIndex]]) && !$this->pageNotFound) {
         $this->method = $url[$startIndex];
       } else {
         $this->method = 'pageNotFound';

@@ -28,6 +28,19 @@ class Variantes {
     return $response;
   }
 
+  /**
+  * Verifica se já existe uma variante igual (mesma cor, tamanho e material) no artigo
+  * @param    int|null  $ignorarId   id da variante a ignorar (ao editar)
+  */
+  public static function existeVariante(int $artigoId, $cor, $tamanho, $material, $ignorarId = null) {
+    $conn = new Db();
+    $response = $conn->execQuery(
+      'SELECT COUNT(*) AS total FROM variantes WHERE artigo_id = ? AND cor <=> ? AND tamanho <=> ? AND material <=> ? AND id <> ?',
+      array('isssi', array($artigoId, $cor, $tamanho, $material, (int) $ignorarId))
+    );
+    return (int) $response[0]['total'] > 0;
+  }
+
   public static function addVariante($data) {
     $conn = new Db();
     $response = $conn->execQuery('INSERT INTO variantes (artigo_id, cor, tamanho, material, stock) VALUES (?, ?, ?, ?, ?)', array(

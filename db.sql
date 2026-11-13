@@ -33,8 +33,14 @@ CREATE TABLE `utilizador` (
   `nome` varchar(400) DEFAULT NULL COMMENT 'Name',
   `fotografia` varchar(4000) DEFAULT NULL COMMENT 'Photo',
   `ativo` bit(1) DEFAULT NULL,
+  `admin` bit(1) NOT NULL DEFAULT b'0' COMMENT 'Administrador (gere utilizadores)',
+  `alterar_palavra_passe` bit(1) NOT NULL DEFAULT b'0' COMMENT 'Obriga a alterar a palavra-passe no proximo acesso',
   PRIMARY KEY (`id_utilizador`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='User table';
+
+-- Utilizador inicial: admin / admin123 (hash bcrypt). Tem de alterar a palavra-passe no primeiro acesso.
+INSERT INTO utilizador (id_utilizador, palavra_passe, nome, fotografia, ativo, admin, alterar_palavra_passe) VALUES
+('admin', '$2y$10$3qoka1oxMOSo1cZaEASV3uk.ruq2tx/ap45lQv.1hGywgTj7K.VvG', 'Administrador', NULL, b'1', b'1', b'1');
 
 DROP TABLE IF EXISTS variantes;
 CREATE TABLE `variantes` (
