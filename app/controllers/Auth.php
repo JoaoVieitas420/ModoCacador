@@ -35,7 +35,9 @@ class Auth extends Controller {
       $this->redirect((int) $utilizador['alterar_palavra_passe'] === 1 ? '/perfil' : '/artigo');
     }
 
-    $this->view('auth/login', ['id_utilizador' => ''], false);
+    // mensagem deixada antes do redirecionamento (ex.: sessão terminada por a conta ter sido desativada)
+    $flash = Sessao::obterFlash();
+    $this->view('auth/login', ['id_utilizador' => '', 'erro' => $flash['mensagem'] ?? null], false);
   }
 
   /**

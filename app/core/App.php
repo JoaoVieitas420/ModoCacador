@@ -72,6 +72,8 @@ class App {
       return;
     }
 
+    $utilizador = $this->sincronizarUtilizador($utilizador);
+
     if ($utilizador['alterar_palavra_passe'] && !in_array($nome, ['Perfil', 'Auth'])) {
       $this->redirecionar('/perfil');
     }
@@ -80,6 +82,36 @@ class App {
       Sessao::flash('erro', 'Apenas administradores podem gerir utilizadores.');
       $this->redirecionar('/artigo');
     }
+  }
+
+  /**
+  * Os dados do utilizador são copiados para a sessão no login, por isso alterações feitas
+  * depois por um administrador (retirar o perfil de admin, desativar a conta, redefinir a
+  * palavra-passe) não se refletiriam numa sessão já aberta. Em cada pedido relê-se o
+  * registo da BD:
+  * > conta eliminada ou desativada: a sessão é terminada
+  * > restantes campos: a sessão é atualizada com os valores atuais
+  *
+  * @param  array  $utilizador  dados do utilizador guardados na sessão
+  * @return array               dados atualizados
+  */
+  private function sincronizarUtilizador(array $utilizador) {
+    $registo = \app\models\Utilizadores::findUtilizadorById($utilizador['id'])[0] ?? null;
+
+    if ($registo === null || (int) $registo['ativo'] !== 1) {
+      Sessao::sair();
+      Sessao::iniciar(); // nova sessão (vazia) só para levar a mensagem até à página de login
+      Sessao::flash('erro', 'A sua conta foi desativada. Contacte um administrador.');
+      $this->redirecionar('/auth/login');
+    }
+
+    Sessao::atualizar([
+      'nome' => $registo['nome'],
+      'fotografia' => $registo['fotografia'],
+      'admin' => (int) $registo['admin'] === 1,
+      'alterar_palavra_passe' => (int) $registo['alterar_palavra_passe'] === 1
+    ]);
+    return Sessao::utilizador();
   }
 
   private function redirecionar(string $caminho) {
