@@ -3,7 +3,7 @@ $a = $data['artigo'];
 $erros = $data['erros'];
 $editar = !empty($a['id']);
 $acao = $editar ? $url_alias . '/artigo/update/' . $a['id'] : $url_alias . '/artigo/create';
-$rotulos = ['nome' => 'Nome', 'categoria_id' => 'Categoria', 'ano' => 'Ano do modelo', 'preco' => 'Preço', 'avaliacao' => 'Avaliação'];
+$rotulos = ['nome' => 'Nome', 'categoria_id' => 'Categoria', 'ano' => 'Ano do modelo', 'preco' => 'Preço', 'avaliacao' => 'Avaliação', 'fotos' => 'Fotografias'];
 $invalido = function ($campo) use ($erros) {
   return isset($erros[$campo]) ? 'aria-invalid="true" aria-describedby="' . $campo . '-erro"' : '';
 };
@@ -36,7 +36,7 @@ $erro = function ($campo) use ($erros) {
   </div>
 <?php } ?>
 
-<form action="<?php echo $acao; ?>" method="POST" novalidate style="display: flex; flex-direction: column; gap: 24px">
+<form action="<?php echo $acao; ?>" method="POST" enctype="multipart/form-data" novalidate style="display: flex; flex-direction: column; gap: 24px">
   <input type="hidden" name="csrf" value="<?php echo $csrf; ?>">
 
   <section class="cartao cartao-corpo" aria-labelledby="s-info">
@@ -82,6 +82,22 @@ $erro = function ($campo) use ($erros) {
     </div>
   </section>
 
+  <?php if (!$editar) { ?>
+  <section class="cartao cartao-corpo" aria-labelledby="s-fotos">
+    <div>
+      <h2 id="s-fotos">Fotografias <span class="opcional">(opcional)</span></h2>
+      <p class="secundario">A primeira fotografia escolhida é a principal. Pode acrescentar mais depois, em Editar artigo.</p>
+    </div>
+    <div class="campo">
+      <label for="fotos">Escolher fotografias</label>
+      <input class="input" id="fotos" name="fotos[]" type="file" multiple accept="image/jpeg,image/png,image/webp" style="padding-top: 9px" data-pre-visualizar="fotos-lista" <?php echo $invalido('fotos') ?: 'aria-describedby="fotos-ajuda"'; ?>>
+      <?php echo $erro('fotos') ?: '<span class="campo-ajuda" id="fotos-ajuda">JPG, PNG ou WebP, até 5 MB cada e no máximo 10 fotografias.</span>'; ?>
+      <?php if (!empty($erros)) { ?><span class="campo-ajuda">Por segurança, o browser não guarda os ficheiros escolhidos: volte a escolhê-los.</span><?php } ?>
+    </div>
+    <ul class="lista-imagens" id="fotos-lista" hidden></ul>
+  </section>
+  <?php } ?>
+
   <?php if ($editar) { ?>
   <section class="cartao cartao-corpo" aria-labelledby="s-img">
     <div>
@@ -104,17 +120,20 @@ $erro = function ($campo) use ($erros) {
         <?php } ?>
       </ul>
     <?php } ?>
-    <div class="grelha-campos" style="align-items: flex-end">
+    <div class="grelha-campos" style="align-items: flex-start">
       <div class="campo" style="flex-grow: 3">
-        <label for="nova-imagem">Adicionar imagem</label>
-        <input class="input" id="nova-imagem" name="caminho" type="text" form="form-imagem" placeholder="<?php echo $url_alias; ?>/assets/img/artigos/<?php echo $a['id']; ?>_5.jpg">
+        <label for="nova-imagem">Adicionar fotografias</label>
+        <input class="input" id="nova-imagem" name="fotos[]" type="file" multiple accept="image/jpeg,image/png,image/webp" form="form-imagem" style="padding-top: 9px" data-pre-visualizar="nova-imagem-lista" aria-describedby="nova-imagem-ajuda">
+        <span class="campo-ajuda" id="nova-imagem-ajuda">JPG, PNG ou WebP, até 5 MB cada e no máximo 10 de cada vez.</span>
       </div>
       <div class="campo">
         <label for="nova-imagem-cor">Cor <span class="opcional">(opcional)</span></label>
-        <input class="input" id="nova-imagem-cor" name="cor" type="text" form="form-imagem" maxlength="100">
+        <input class="input" id="nova-imagem-cor" name="cor" type="text" form="form-imagem" maxlength="100" aria-describedby="nova-imagem-cor-ajuda">
+        <span class="campo-ajuda" id="nova-imagem-cor-ajuda">Aplica-se a todas as fotografias enviadas.</span>
       </div>
-      <button type="submit" class="btn btn-secundario" form="form-imagem" style="flex: 0 0 auto">Adicionar</button>
+      <button type="submit" class="btn btn-secundario" form="form-imagem" style="flex: 0 0 auto; margin-top: 27px"><?php echo icone('upload', 16); ?> Adicionar</button>
     </div>
+    <ul class="lista-imagens" id="nova-imagem-lista" <?php echo !empty($data['imagens']) ? 'data-sem-principal' : ''; ?> hidden></ul>
   </section>
   <?php } ?>
 
@@ -125,7 +144,7 @@ $erro = function ($campo) use ($erros) {
 </form>
 
 <?php if ($editar) { ?>
-  <form id="form-imagem" action="<?php echo $url_alias; ?>/artigo/adicionarImagem/<?php echo $a['id']; ?>" method="POST">
+  <form id="form-imagem" action="<?php echo $url_alias; ?>/artigo/adicionarImagem/<?php echo $a['id']; ?>" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="csrf" value="<?php echo $csrf; ?>">
   </form>
 <?php } ?>

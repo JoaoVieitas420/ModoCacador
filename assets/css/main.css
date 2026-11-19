@@ -172,11 +172,44 @@ p { margin: 0; }
   /* fixo ao fazer scroll: ocupa sempre a altura do ecrã */
   position: sticky; top: 0; align-self: flex-start; height: 100vh; overflow-y: auto;
 }
-/* em ecrãs estreitos o menu passa para cima do conteúdo */
-@media (max-width: 820px) {
+.menu-topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.menu-botao {
+  display: none; align-items: center; justify-content: center; flex: none; width: 44px; height: 44px; padding: 0;
+  border: 0; border-radius: 8px; background: transparent; color: var(--menu-texto); cursor: pointer;
+}
+.menu-botao:hover { color: #FFFFFF; background: rgba(255, 255, 255, .08); }
+.menu-botao:focus-visible { outline-color: var(--verde-claro); }
+.barra-movel, .menu-fundo { display: none; }
+
+/* em telemóveis (ecrãs estreitos, ou baixos em paisagem): barra no topo com o botão do menu;
+   o menu lateral fica escondido à esquerda e desliza por cima do conteúdo quando é aberto
+   (classe menu-aberto no body). A mesma condição está no main.js (ecraMovel). */
+@media (max-width: 820px), (orientation: landscape) and (max-height: 500px) {
   .app { flex-direction: column; }
-  .menu { flex: none; gap: 16px; position: static; height: auto; align-self: stretch; }
-  .menu-rodape { margin-top: 0; }
+  .barra-movel {
+    display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+    position: sticky; top: 0; z-index: 30;
+    background: #1D2820 url('../img/menu/camuflado.svg') repeat; background-size: 480px;
+  }
+  .barra-movel .brand { padding: 2px 4px; gap: 10px; }
+  .barra-movel .brand img { width: 36px; height: 36px; }
+  .barra-movel .wm { font-size: 15px; }
+  .menu-botao { display: inline-flex; }
+  .menu {
+    /* align-self: stretch — sem isto herda flex-start e fica só com a altura do conteúdo */
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; height: auto; align-self: stretch;
+    width: min(300px, 85vw); gap: 24px;
+    transform: translateX(-100%); visibility: hidden;
+    transition: transform .25s cubic-bezier(.23, 1, .32, 1), visibility 0s linear .25s;
+    box-shadow: 0 0 40px rgba(0, 0, 0, .35);
+  }
+  .menu-aberto .menu { transform: none; visibility: visible; transition: transform .25s cubic-bezier(.23, 1, .32, 1); }
+  .menu-fundo { display: block; position: fixed; inset: 0; z-index: 40; background: rgba(23, 32, 26, .55); }
+  .menu-fundo[hidden] { display: none; }
+  .menu-aberto { overflow: hidden; } /* sem scroll da página por trás do menu */
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu, .menu-aberto .menu { transition: none; }
 }
 .brand { display: flex; align-items: center; gap: 12px; padding: 4px 8px; min-height: 44px; text-decoration: none; border-radius: var(--raio); }
 .brand img { width: 48px; height: 48px; flex: none; display: block; }
@@ -208,7 +241,7 @@ p { margin: 0; }
 }
 .conteudo-estreito { max-width: 880px; }
 /* com o menu por cima, o conteúdo ocupa a largura toda (sem margens automáticas) */
-@media (max-width: 820px) { .conteudo { margin-inline: 0; } }
+@media (max-width: 820px), (orientation: landscape) and (max-height: 500px) { .conteudo { margin-inline: 0; } }
 .cabecalho { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
 .cabecalho h1 { font-size: 32px; }
 .cabecalho p { color: var(--texto-suave); margin-top: 4px; }

@@ -51,3 +51,69 @@ if (principal) {
     });
   });
 }
+
+// Pré-visualização das fotografias escolhidas num campo de ficheiros (novo artigo)
+document.querySelectorAll('[data-pre-visualizar]').forEach((campo) => {
+  const lista = document.getElementById(campo.dataset.preVisualizar);
+  let urls = [];
+  campo.addEventListener('change', () => {
+    urls.forEach((url) => URL.revokeObjectURL(url));
+    urls = [];
+    lista.innerHTML = '';
+    Array.from(campo.files).forEach((ficheiro, i) => {
+      const url = URL.createObjectURL(ficheiro);
+      urls.push(url);
+      const item = document.createElement('li');
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = 'Fotografia ' + (i + 1);
+      const legenda = document.createElement('span');
+      legenda.className = 'secundario';
+      if (i === 0 && !('semPrincipal' in lista.dataset)) {
+        const principal = document.createElement('strong');
+        principal.textContent = 'Principal';
+        legenda.append(principal, ' · ');
+      }
+      legenda.append(ficheiro.name);
+      legenda.style.overflowWrap = 'anywhere';
+      item.append(img, legenda);
+      lista.append(item);
+    });
+    lista.hidden = campo.files.length === 0;
+  });
+});
+
+// Menu lateral em ecrãs estreitos: abre com o botão da barra do topo,
+// fecha com o botão X, o fundo escurecido, a tecla Esc ou ao alargar o ecrã
+const menuAbrir = document.getElementById('menu-abrir');
+if (menuAbrir) {
+  const menuFechar = document.getElementById('menu-fechar');
+  const menuFundo = document.getElementById('menu-fundo');
+  // a mesma condição do @media do menu no main.css
+  const ecraMovel = window.matchMedia('(max-width: 820px), (orientation: landscape) and (max-height: 500px)');
+
+  const definirMenu = (aberto, devolverFoco = true) => {
+    document.body.classList.toggle('menu-aberto', aberto);
+    menuAbrir.setAttribute('aria-expanded', String(aberto));
+    menuFundo.hidden = !aberto;
+    // o conteúdo por trás deixa de receber foco/cliques enquanto o menu está aberto
+    document.querySelectorAll('.barra-movel, .conteudo').forEach((zona) => { zona.inert = aberto; });
+    if (aberto) {
+      menuFechar.focus();
+    } else if (devolverFoco) {
+      menuAbrir.focus();
+    }
+  };
+
+  menuAbrir.addEventListener('click', () => definirMenu(true));
+  menuFechar.addEventListener('click', () => definirMenu(false));
+  menuFundo.addEventListener('click', () => definirMenu(false));
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && document.body.classList.contains('menu-aberto')) {
+      definirMenu(false);
+    }
+  });
+  ecraMovel.addEventListener('change', () => {
+    if (!ecraMovel.matches) definirMenu(false, false);
+  });
+}

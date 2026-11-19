@@ -2,6 +2,7 @@
 use app\core\Sessao;
 $secao = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'))[1] ?? '';
 $flash = Sessao::obterFlash();
+$wm_animar = Sessao::animarLogo() ? 'wm-animar' : '';
 ?>
 <!doctype html>
 <html lang="pt-PT">
@@ -16,11 +17,24 @@ $flash = Sessao::obterFlash();
 </head>
 <body>
 <div class="app">
-  <nav class="menu" aria-label="Navegação principal">
+  <!-- barra do topo (só em ecrãs estreitos): botão do menu lateral + logo -->
+  <header class="barra-movel">
+    <button type="button" class="menu-botao" id="menu-abrir" aria-controls="menu" aria-expanded="false" aria-label="Abrir menu"><?php echo icone('menu', 24); ?></button>
     <a href="<?php echo $url_alias; ?>/artigo" class="brand" aria-label="Modo Caçador — página inicial">
       <img src="<?php echo $url_alias; ?>/assets/img/logo/logo_emblema.png" alt="">
-      <?php $wm_classe = Sessao::animarLogo() ? 'wm-animar' : ''; include 'app/views/partials/nome.php'; ?>
+      <?php $wm_classe = $wm_animar; include 'app/views/partials/nome.php'; ?>
     </a>
+  </header>
+  <div class="menu-fundo" id="menu-fundo" hidden></div>
+
+  <nav class="menu" id="menu" aria-label="Navegação principal">
+    <div class="menu-topo">
+      <a href="<?php echo $url_alias; ?>/artigo" class="brand" aria-label="Modo Caçador — página inicial">
+        <img src="<?php echo $url_alias; ?>/assets/img/logo/logo_emblema.png" alt="">
+        <?php $wm_classe = $wm_animar; include 'app/views/partials/nome.php'; ?>
+      </a>
+      <button type="button" class="menu-botao menu-fechar" id="menu-fechar" aria-label="Fechar menu"><?php echo icone('fechar', 24); ?></button>
+    </div>
     <ul class="menu-lista">
       <li><a class="menu-item" href="<?php echo $url_alias; ?>/artigo" <?php echo in_array($secao, ['artigo', 'variante']) ? 'aria-current="page"' : ''; ?>><?php echo icone('artigos', 20); ?> Artigos</a></li>
       <li><a class="menu-item" href="<?php echo $url_alias; ?>/categoria" <?php echo $secao === 'categoria' ? 'aria-current="page"' : ''; ?>><?php echo icone('categorias', 20); ?> Categorias</a></li>

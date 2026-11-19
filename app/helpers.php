@@ -21,6 +21,8 @@ function icone(string $nome, int $tamanho = 18) {
     'seta-dir' => '<path d="M9 6l6 6-6 6"></path>',
     'sucesso' => '<circle cx="12" cy="12" r="10"></circle><path d="M8 12l3 3 5-6"></path>',
     'erro' => '<circle cx="12" cy="12" r="10"></circle><path d="M12 7v6M12 16.5v.5"></path>',
+    'menu' => '<path d="M4 6h16M4 12h16M4 18h16"></path>',
+    'fechar' => '<path d="M6 6l12 12M18 6L6 18"></path>',
     'upload' => '<path d="M12 16V4M7 9l5-5 5 5M4 20h16"></path>',
     'estrela' => '<path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z" fill="#B7791F" stroke="none"></path>',
   ];
