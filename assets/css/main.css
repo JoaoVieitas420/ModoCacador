@@ -256,8 +256,9 @@ p { margin: 0; }
    Cada clique carrega uma página nova; sem isto o browser limpa o ecrã e volta a desenhar
    o menu (logo, fundo camuflado) e nota-se um "piscar". Com as View Transitions o menu e a
    barra do topo ficam parados (trocam sem animação) e só o conteúdo faz um fade curto.
-   Browsers sem suporte ignoram estas regras e navegam normalmente. */
-@view-transition { navigation: auto; }
+   Browsers sem suporte ignoram estas regras e navegam normalmente.
+   A ativação (@view-transition { navigation: auto; }) está em linha no <head>, em
+   app/views/partials/transicao.php — ver aí porquê. */
 .menu { view-transition-name: menu-lateral; }
 .barra-movel { view-transition-name: barra-movel; }
 ::view-transition-group(menu-lateral), ::view-transition-group(barra-movel),

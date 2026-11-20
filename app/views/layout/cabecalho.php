@@ -9,6 +9,7 @@ $wm_animar = Sessao::animarLogo() ? 'wm-animar' : '';
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <?php require 'app/views/partials/transicao.php'; ?>
   <title><?php echo e($titulo ?? 'Modo Caçador'); ?> — Modo Caçador</title>
   <link rel="icon" href="<?php echo $url_alias; ?>/assets/img/logo/logo_emblema.png">
   <?php require 'app/views/partials/fontes.php'; ?>

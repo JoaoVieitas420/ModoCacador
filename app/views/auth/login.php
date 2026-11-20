@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <?php require 'app/views/partials/transicao.php'; ?>
   <title>Iniciar sessão — Modo Caçador</title>
   <link rel="icon" href="<?php echo $url_alias; ?>/assets/img/logo/logo_emblema.png">
   <?php require 'app/views/partials/fontes.php'; ?>
