@@ -11,8 +11,7 @@ $wm_animar = Sessao::animarLogo() ? 'wm-animar' : '';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?php echo e($titulo ?? 'Modo Caçador'); ?> — Modo Caçador</title>
   <link rel="icon" href="<?php echo $url_alias; ?>/assets/img/logo/logo_emblema.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Saira+Stencil+One&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+  <?php require 'app/views/partials/fontes.php'; ?>
   <link rel="stylesheet" href="<?php echo $url_alias; ?>/assets/css/main.css?v=<?php echo filemtime('assets/css/main.css'); ?>">
 </head>
 <body>
